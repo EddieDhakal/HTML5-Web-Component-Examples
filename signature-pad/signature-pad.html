@@ -1,0 +1,202 @@
+<template id="signature-pad">
+    <!-- TODO: Put a version number. -->
+    <style>
+        canvas {
+            border: 1px solid darkgreen;
+        }
+
+        #clear {
+            background-color: yellow;
+            position: absolute;
+            right: 0; top: 0;
+        }
+
+        #container {
+            position: relative;
+            cursor: default;
+            display: inline-block;
+            user-select: none;
+
+            /*-webkit-user-select: none;*/
+            /*-moz-user-select: none;
+            -ms-user-select: none;*/
+        }
+    </style>
+
+    <div id="container">
+        <canvas id="signature-area"></canvas>
+        <button id="clear">Clear</button>
+    </div>
+</template>
+
+<script>
+    (function() {
+        'use strict';
+
+        var doc = document.currentScript.ownerDocument;
+        var proto = Object.create(HTMLElement.prototype);
+
+        var drawable = false;
+
+        var MOUSE = {
+            PRESSED: 1
+        };
+
+        var official_attributes = ['signature'];
+
+        var clear_event = new CustomEvent('onCleared');
+
+        function attach_signature_events() {
+            if (this === window) return;
+
+            var canvas = this.shadowRoot.getElementById('signature-area');
+            var context;
+
+            canvas.onmousedown = function(mouse) {
+                context = this.getContext('2d');
+
+                context.lineWidth = 1;
+                context.lineCap = 'round';
+
+                drawable = true;
+
+                context.beginPath();
+                context.shadowBlur = 2;
+                context.shadowColor = 'rgb(0, 0, 0)';
+
+                var x = mouse.offsetX;
+                var y = mouse.offsetY;
+
+                context.moveTo(x - 1, y);
+                context.lineTo(x + 1, y);
+
+                context.moveTo(x, y - 1);
+                context.lineTo(x, y + 1);
+
+                context.stroke();
+            };
+
+            canvas.onmouseout = function(mouse) {
+                drawable = false;
+            };
+
+            canvas.onmouseenter = function(mouse) {
+                if (mouse.which === MOUSE.PRESSED) {
+                    drawable = true;
+
+                    var x = mouse.offsetX;
+                    var y = mouse.offsetY;
+
+                    // TODO: Double check why sometimes context is undefined.
+                    context.moveTo(x, y);
+                    context.stroke();
+                }
+            };
+
+            canvas.onmouseup = function(mouse) {
+                drawable = false;
+
+                var dataURL = canvas.toDataURL();
+                var base64 = dataURL.split('data:image/png;base64,')[1];
+
+                var event = new CustomEvent('onSigned', {
+                    detail: {base64: base64}
+                });
+
+                this.dispatchEvent(event);
+            };
+
+            canvas.onmousemove = function(mouse) {
+                if (drawable) {
+                    var x = mouse.offsetX || mouse.clientX;
+                    var y = mouse.offsetY || mouse.clientY;
+
+                    // TODO: Double check why sometimes context is undefined.
+                    context.lineTo(x, y);
+                    context.stroke();
+                }
+            };
+        }
+
+
+        function attach_clear_event() {
+            if (this === window) return;
+
+            var clear_button = this.shadowRoot.getElementById('clear');
+            var self = this;
+
+            clear_button.onclick = function(mouse) {
+                clear_signature.call(self);
+
+                // Create a signal broadcasting the signature has been cleared
+                this.dispatchEvent(clear_event);
+            };
+        }
+
+
+        function clear_signature() {
+            if (this === window) return;
+
+            var canvas = this.shadowRoot.getElementById('signature-area');
+            var context;
+
+            context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+
+        // TODO: Double check why it executes multiple times when binding it with via TemplateBinding.org
+        function load_signature() {
+            if (this === window) return;
+
+            var signature = this.getAttribute('signature');
+
+            if (signature) {
+                var imageSignature = new Image();
+                var canvas = this.shadowRoot.getElementById('signature-area');
+                var context = canvas.getContext('2d');
+                var self = this;
+
+                imageSignature.onload = function() {
+                    clear_signature.call(self);
+                    context.drawImage(this, 0, 0);
+                };
+
+                imageSignature.src = 'data:image/png;base64,' + signature;
+            }
+        }
+
+
+        // Please note, it gets created first then gets attached after
+        proto.createdCallback = function () {
+            var template = doc.getElementById('signature-pad');
+            var clone = doc.importNode(template.content, true);
+            var shadow = this.createShadowRoot();
+
+            shadow.appendChild(clone);
+        };
+
+
+        proto.attachedCallback = function() {
+            load_signature.call(this);
+
+            attach_signature_events.call(this);
+            attach_clear_event.call(this);
+        };
+
+
+
+
+//        proto.attributeChangedCallback = function(attribute, old_value, new_value) {
+//            // Ignore the unofficial attributes
+//            if (official_attributes.indexOf(attribute) === -1)
+//                return;
+//
+//            load_signature.call(this);
+//        };
+
+        doc.registerElement('signature-pad', {
+            prototype: proto
+        });
+    })();
+</script>
