@@ -15,13 +15,14 @@ Also it is a fantastic way to learn I suppose.
 * No external dependencies (except a web browser).
 * Works with or without any Javascript frameworks.
 * No unintended style and script leakage. Thanks to Shadow DOM.
+* No global namespace pollution in Javascript
 
 ### What this is not ###
-* This is not a framework or going to be a framework like Polymer, XTag, Angular, React etc, however, should work seamlessly with any of the frameworks.
+* This is not a framework or going to be a framework like Polymer, XTag, Angular, React etc, however, should work seamlessly with any frameworks out there.
 * I will not be supporting the browsers that do not support native web components. If it does not work for your browser, please feel free to include the polyfills.
 
 ### Usage ###
-**Just copy the web component file and use it like shown below.**
+Just copy the web component file and use it like shown below.
 ```
 <!doctype html>
 <html>
@@ -33,7 +34,12 @@ Also it is a fantastic way to learn I suppose.
 </body>
 </html>
 ```
-done.
+As simple as that. done.
+
+**Note**
+Please make sure to test it via a `http` protocol.
+If you have python installed `python -m http.server` will do the job.
+Or feel free to use any web server.
 
 ### Contribution guidelines ###
 You are more than welcome to contribute so long as you don't over engineer and make simple things complicated.
