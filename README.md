@@ -9,7 +9,7 @@ Also it is a fantastic way to learn I suppose.
 * Easy peasy lemon squeezy to use with a big fat Zero learning curve. Sometimes Lazy way is the best way.
 * Uses attributes rather than innerHTML to describe the properties of web components.
 * Uses innerHTML to describe the [delegate](http://doc.qt.io/qt-5/qtquick-modelviewsdata-modelview.html#view-delegates) if the web component has one.
-* Modern driven views.
+* Model driven views.
 * Is completely self contained.
 * Works out of the box without any complicated setups, external dependencies, build tools, nodejs, npm, bower, gulp, grunt, webpack, browserify and transpilers. Life was simple back in old days of web programming and so are web components.
 * No external dependencies (except a web browser).
