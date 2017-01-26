@@ -16,10 +16,6 @@
             cursor: default;
             display: inline-block;
             user-select: none;
-
-            /*-webkit-user-select: none;*/
-            /*-moz-user-select: none;
-            -ms-user-select: none;*/
         }
     </style>
 
@@ -42,6 +38,7 @@
             PRESSED: 1
         };
 
+        // TODO: Put more attributes like a pen colour, pen width etc 
         var official_attributes = ['signature'];
 
         var clear_event = new CustomEvent('onCleared');
