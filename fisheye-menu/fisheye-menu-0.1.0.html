@@ -1,4 +1,6 @@
-<template id="fisheye-menu"></template>
+<template id='fisheye-menu'>
+    <div id='menu-container'></div>
+</template>
 
 <script>
     (function() {
@@ -14,8 +16,38 @@
             shadow.appendChild(clone);
         };
 
+
+        proto.attachedCallback = function() {
+            let model_name = this.getAttribute('model');
+            let model = window[model_name];
+
+            load_menu.call(this, model);
+        };
+
         doc.registerElement('fisheye-menu', {
             prototype: proto
         });
+
+        /**
+         * Function to convert menu into the fisheye view based
+         *  on the model supplied.
+         */
+        function load_menu(model) {
+            let content = '';
+            for(let i = 0; i < model.length; i++) {
+                let icon = model[i].icon;
+                let tooltip = model[i].tooltip;
+
+                content += `
+                    <div class='menu-item'>
+                        <span>${tooltip}</span>
+                        <img src='${icon}' alt='${tooltip}'>
+                    </div>
+                `
+            }
+
+            let container = this.shadowRoot.getElementById('menu-container');
+            container.innerHTML = content;
+        }
     })();
 </script>
