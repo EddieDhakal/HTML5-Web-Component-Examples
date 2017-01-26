@@ -1,0 +1,21 @@
+<template id="fisheye-menu"></template>
+
+<script>
+    (function() {
+        'use strict';
+
+        let doc = document.currentScript.ownerDocument;
+        let proto = Object.create(HTMLElement.prototype);
+
+        proto.createdCallback = function() {
+            let template = doc.getElementById('fisheye-menu');
+            let clone = doc.importNode(template.content, true);
+            let shadow = this.createShadowRoot();
+            shadow.appendChild(clone);
+        };
+
+        doc.registerElement('fisheye-menu', {
+            prototype: proto
+        });
+    })();
+</script>
