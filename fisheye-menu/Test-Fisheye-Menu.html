@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test Fisheye Menu</title>
+    <link rel="import" href="fisheye-menu-0.1.0.html">
+
+    <script>
+        'use strict';
+
+        let fisheye_model = [
+            {
+                icon: 'icons/brush.svg',
+                tooltip: 'Art Gallery',
+                onClicked: function() {
+                    alert('Art Gallery is clicked.');
+                }
+            },
+            {
+                icon: 'icons/envelope.svg',
+                tooltip: 'Emails',
+                onClicked: function() {
+                    alert('Emails is clicked.');
+                }
+            },
+            {
+                icon: 'icons/home.svg',
+                tooltip: 'Home Page',
+                onClicked: function() {
+                    alert('Home Page is clicked.');
+                }
+            },
+            {
+                icon: 'icons/linux.svg',
+                tooltip: 'Operating Systems',
+                onClicked: function() {
+                    alert('Operating Systems is clicked.');
+                }
+            },
+            {
+                icon: 'icons/music.svg',
+                tooltip: 'Sing and Dance',
+                onClicked: function() {
+                    alert('Sing and Dance is clicked.');
+                }
+            }
+        ];
+    </script>
+</head>
+<body>
+
+    <!--Properties are described as attributes-->
+    <fisheye-menu
+        model='fisheye_model'
+        position='bottom'
+        autohide=false
+        zoom=2></fisheye-menu>
+</body>
+</html>
