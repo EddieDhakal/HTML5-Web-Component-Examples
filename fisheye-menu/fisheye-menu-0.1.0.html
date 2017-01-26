@@ -1,4 +1,68 @@
 <template id='fisheye-menu'>
+    <style>
+        #menu-container {
+            display: flex;
+            position: fixed;
+            width: 30em;
+            left: calc(50% - 15em);
+        }
+
+        #menu-container.bottom, #menu-container.top {
+            flex-direction: row;
+        }
+
+        #menu-container.left, #menu-container.right {
+            flex-direction: column;
+        }
+
+        #menu-container.bottom {
+            bottom: 0;
+        }
+
+        .menu-item {
+            margin: 0 1.5em;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .menu-item img {
+            width: 3em;
+            height: 3em;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /*#menu-container.bottom .menu-item img:hover {*/
+            /*transform: scale(2) translate(0, -12px);*/
+        /*}*/
+
+        #menu-container.top .menu-item img:hover {
+            transform: scale(2) translate(0, 12px);
+        }
+
+        .menu-item:hover img + span {
+            display: inline;
+        }
+
+        .menu-item span {
+            display: none;
+            position: absolute;
+            background-color: #7dbeed;
+            text-align: center;
+            color: white;
+            padding: 3px;
+            width: 192px;
+            left: -72px;
+        }
+
+        #menu-container.bottom .menu-item span {
+            top: -5em;
+        }
+
+        #menu-container.top .menu-item span {
+            top: 6.5em;
+        }
+    </style>
+
     <div id='menu-container'></div>
 </template>
 
@@ -19,9 +83,13 @@
 
         proto.attachedCallback = function() {
             let model_name = this.getAttribute('model');
+            let zoom = parseInt(this.getAttribute('zoom'));
+            let position = this.getAttribute('position');
             let model = window[model_name];
 
-            load_menu.call(this, model);
+            let menu = load_menu.call(this, model);
+            menu.className = position;
+            apply_zoom.call(this, zoom);
         };
 
         doc.registerElement('fisheye-menu', {
@@ -37,17 +105,23 @@
             for(let i = 0; i < model.length; i++) {
                 let icon = model[i].icon;
                 let tooltip = model[i].tooltip;
+                let onClicked = model[i].onClicked;
 
                 content += `
                     <div class='menu-item'>
+                        <img
+                            src='${icon}'
+                            alt='${tooltip}'>
+
                         <span>${tooltip}</span>
-                        <img src='${icon}' alt='${tooltip}'>
                     </div>
                 `
             }
 
             let container = this.shadowRoot.getElementById('menu-container');
             container.innerHTML = content;
+
+            return container;
         }
     })();
 </script>
