@@ -3,16 +3,26 @@
         #menu-container {
             display: flex;
             position: fixed;
-            width: 30em;
-            left: calc(50% - 15em);
         }
 
         #menu-container.bottom, #menu-container.top {
             flex-direction: row;
+            width: 30em;
+            left: calc(50% - 15em);
         }
 
         #menu-container.left, #menu-container.right {
             flex-direction: column;
+            height: 30em;
+            top: calc(50% - 15em);
+        }
+
+        #menu-container.left {
+            left: 0;
+        }
+
+        #menu-container.right {
+            right: 0;
         }
 
         #menu-container.bottom {
@@ -20,9 +30,18 @@
         }
 
         .menu-item {
-            margin: 0 1.5em;
             cursor: pointer;
             position: relative;
+        }
+
+        #menu-container.top .menu-item,
+        #menu-container.bottom .menu-item{
+            margin: 0 1.5em;
+        }
+
+        #menu-container.left .menu-item,
+        #menu-container.right .menu-item{
+            margin: 1.5em 0;
         }
 
         .menu-item img {
@@ -97,6 +116,8 @@
 
             if (position == 'top') translate = '0, 12px';
             if (position == 'bottom') translate = '0, -12px';
+            if (position == 'left') translate = '12px, 0';
+            if (position == 'right') translate = '-12px, 0';
 
             for (let i = 0; i < menu_items.length; i++) {
                 let menu_item = menu_items[i];
