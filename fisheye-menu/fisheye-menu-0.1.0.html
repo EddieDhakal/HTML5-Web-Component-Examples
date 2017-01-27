@@ -31,14 +31,6 @@
             transition: all 0.2s ease-in-out;
         }
 
-        /*#menu-container.bottom .menu-item img:hover {*/
-            /*transform: scale(2) translate(0, -12px);*/
-        /*}*/
-
-        #menu-container.top .menu-item img:hover {
-            transform: scale(2) translate(0, 12px);
-        }
-
         .menu-item:hover img + span {
             display: inline;
         }
@@ -89,12 +81,34 @@
 
             let menu = load_menu.call(this, model);
             menu.className = position;
-            apply_zoom.call(this, zoom);
+            apply_hover_style.call(this, zoom);
         };
 
         doc.registerElement('fisheye-menu', {
             prototype: proto
         });
+
+
+        function apply_hover_style(zoom) {
+            let container = this.shadowRoot.getElementById('menu-container');
+            let menu_items = container.querySelectorAll('.menu-item img');
+            let position = container.classList;
+            let translate = '0, 0';
+
+            if (position == 'top') translate = '0, 12px';
+            if (position == 'bottom') translate = '0, -12px';
+
+            for (let i = 0; i < menu_items.length; i++) {
+                let menu_item = menu_items[i];
+                menu_item.onmouseenter = function() {
+                    this.style.transform = `scale(${zoom}) translate(${translate})`;
+                };
+
+                menu_item.onmouseleave = function() {
+                    this.style.transform = 'none';
+                };
+            }
+        }
 
         /**
          * Function to convert menu into the fisheye view based
